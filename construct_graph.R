@@ -342,93 +342,30 @@ last.step <- function(inputs.outputs, pc.graph, mimic.graph){
 	
 	pc.adj.matrix <- data.frame(as(pc.graph, "matrix"))
 	mimic.adj.matrix <- data.frame(as(mimic.graph, "matrix"))
-	# print("mimic.adj.matrix - Original")
-	# print(mimic.adj.matrix)
 
 	n.vars <- ncol(pc.adj.matrix)
 	
 	n.latents <- ncol(mimic.adj.matrix)-n.vars
-	
-	# print("n.latents")
-	# print(n.latents)
-	# print(c(names(pc.adj.matrix),
-	#  paste(c("L"), 1:n.latents, sep="")))
-	# names(mimic.adj.matrix) <- c(names(pc.adj.matrix),
-	#  paste(c("L"), 1:n.latents, sep=""))
-	# 
-	# print("mimic.adj.matrix - Named")
-	# print(mimic.adj.matrix)
-	
+		
 	false.outputs <- names(which(apply(pc.adj.matrix[inputs,
 	 outputs], 2, sum)==0))
-	# print(false.outputs)
+
 	if(!is.null(false.outputs) && length(false.outputs)>0){
 		
-	# 	if(isTRUE(length(false.outputs)==1)){
-	# 
-	# 		false.connected.latents<-(which(mimic.adj.matrix[,
-	# 		 false.outputs]==1))
-	# 
-	# 		# Removing edge between latent and false outputs
-	# 		 mimic.adj.matrix[false.connected.latents,
-	# 		 which(names(mimic.adj.matrix)%in%false.outputs)] <- 0	
-	# 
-	# mimic.adj.matrix[-(false.connected.latents),
-	#  which(names(mimic.adj.matrix)%in%false.outputs)] <-
-	#  pc.adj.matrix[,which(names(mimic.adj.matrix)%in%false.outputs)]
-	# 
-	# 
-	# mimic.adj.matrix[which(names(mimic.adj.matrix)%in%false.outputs),
-	# -(false.connected.latents)] <-
-	#  pc.adj.matrix[which(names(mimic.adj.matrix)%in%false.outputs),]
-	# 
-	# 	}
-	# 	else{
 			
 			for(j in false.outputs){
-				# print("j")
-				# 				print(j)
-				# 				print("LOOKAT")
-				# 				print(names(mimic.adj.matrix))
-				# 				print(which(names(mimic.adj.matrix)%in%j))
 				
 				false.connected.latents<-(which(mimic.adj.matrix[
 				 j]==1))
 				
-				# print(mimic.adj.matrix[
-				 # j]==1)
-				# print("false.connected.latents")
-				
-				# print(false.connected.latents)
-				
 				mimic.adj.matrix[false.connected.latents,
 				 which(names(mimic.adj.matrix)%in%j)] <- 0
 				
-				# print("mimic.adj.matrix")
-				# print(mimic.adj.matrix)
-				# print('j')
-				# print(j)
-				# print("which(names(mimic.adj.matrix)%in%paste(L,j,sep=))")
-				# print(which(names(mimic.adj.matrix)%in%j))
 			}
-		# 	print("which(mimic.adj.matrix[,
-		# 	 false.outputs]==1)")			
-		# 	print((mimic.adj.matrix[,
-		# 	 false.outputs]==1))
-		# 	print("asdf")
-		# 	print(which(mimic.adj.matrix[,false.outputs]==1, arr.ind=T)[,2])
-		# print("false.connected.latents")
-		# print(false.connected.latents)
 
 		for(i in false.outputs){
 			false.connected.latents<-(which(mimic.adj.matrix[
 			 i]==1))
-			# print("i")
-			# 			print(i)
-			# 			
-			# print(which(names(mimic.adj.matrix)%in%i))
-			# 			print(pc.adj.matrix[,which(names(mimic.adj.matrix)%in%i)])
-			# 			
 			mimic.adj.matrix[(1:n.vars),
 			 which(names(mimic.adj.matrix)%in%i)] <-
 			 pc.adj.matrix[,which(names(mimic.adj.matrix)%in%i)]
@@ -438,10 +375,7 @@ last.step <- function(inputs.outputs, pc.graph, mimic.graph){
 	 pc.adj.matrix[which(names(mimic.adj.matrix)%in%i),]
 			
 			}		
-		# }
 	}
-	# print("mimic.adj.matrix")
-	# print(mimic.adj.matrix)
 	return(igraph.to.graphNEL(graph.adjacency(mimic.adj.matrix)))
 }
 
