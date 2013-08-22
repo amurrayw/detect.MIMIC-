@@ -16,7 +16,7 @@ read.dag <- function(file){
 
 # Takes in a graphNEL object, and generates normally distributed data from it.
 generate.data.from.dag <- function(graph, n=100, errDist="normal"){	
-	# orig.var.names<-nodes(graph)
+
 	top.sort <- topological.sort(igraph.from.graphNEL(graph))
 	var.names <- nodes(graph)[top.sort]
 	

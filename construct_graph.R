@@ -260,7 +260,6 @@ final.pc.run <- function(data, depth=0, prev.graph=NULL,
 		return(igraph.to.graphNEL(prev.graph))
 	}
 	else{
-		
 		new.graph <- igraph.to.graphNEL(new.graph)
 		return(final.pc.run(data=data, depth=depth+1, prev.graph=new.graph,
 			 indepTest=indepTest, alpha=alpha, suffStat=suffStat, n=n, p=p))
@@ -349,10 +348,14 @@ last.step <- function(inputs.outputs, pc.graph, mimic.graph){
 		
 	false.outputs <- names(which(apply(pc.adj.matrix[inputs,
 	 outputs], 2, sum)==0))
+	
+	names(mimic.adj.matrix)	<- c(names(pc.adj.matrix), paste("L",
+	 1:n.latents, sep=""))
+	
 
 	if(!is.null(false.outputs) && length(false.outputs)>0){
-		
-			
+		print("false.outputs")
+		print(false.outputs)
 			for(j in false.outputs){
 				
 				false.connected.latents<-(which(mimic.adj.matrix[
@@ -374,7 +377,8 @@ last.step <- function(inputs.outputs, pc.graph, mimic.graph){
 	-(false.connected.latents)] <-
 	 pc.adj.matrix[which(names(mimic.adj.matrix)%in%i),]
 			
-			}		
+			}
+			
 	}
 	return(igraph.to.graphNEL(graph.adjacency(mimic.adj.matrix)))
 }

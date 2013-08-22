@@ -4,7 +4,7 @@ source("construct_graph.R")
 source("data_commands.R")
 
 
-test.graphs <- function(n.graphs=1:5, seed.set=NULL){
+test.graphs <- function(n.graphs=1:5, seed.set=NULL, sample.size=1000){
 	if(!is.null(seed.set)){set.seed(seed.set)}
 	
 	
@@ -14,7 +14,7 @@ test.graphs <- function(n.graphs=1:5, seed.set=NULL){
 		
 		print("RUNNING ON GRAPH")
 		print(i)
-		found.graphs<-test.graph(i)
+		found.graphs<-test.graph(i, sample.size=sample.size)
 		# print(found.graphs$pc.depth.0)
 		
 		plot.test(found.graphs)
@@ -26,10 +26,10 @@ test.graphs <- function(n.graphs=1:5, seed.set=NULL){
 
 
 
-test.graph <- function(file){
+test.graph <- function(file, sample.size=1000){
 	true.graph<-read.dag(file=file)
 
-	generated.data <- generate.data.from.dag(graph=true.graph, n=1000)
+	generated.data <- generate.data.from.dag(graph=true.graph, n=sample.size)
 
 	generated.data.no.latents <- generated.data[,-grep(pattern="[L:digit:]",
 	 names(generated.data))]
