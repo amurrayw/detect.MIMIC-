@@ -49,16 +49,19 @@ graph4.250 <- replicate(test.both.methods("sim.graph.4.r.txt",
 graph5.250 <- replicate(test.both.methods("sim.graph.5.r.txt",
  sample.size=250), n=500)
 
-graph1.100 <- replicate(test.both.methods("sim.graph.1.r.txt",
- sample.size=100), n=500)
-graph2.100 <- replicate(test.both.methods("sim.graph.2.r.txt",
- sample.size=100), n=500)
-graph3.100 <- replicate(test.both.methods("sim.graph.3.r.txt",
- sample.size=100), n=500)
-graph4.100 <- replicate(test.both.methods("sim.graph.4.r.txt",
- sample.size=100), n=500)
-graph5.100 <- replicate(test.both.methods("sim.graph.5.r.txt",
- sample.size=100), n=500)
+
+# So unreliable, not worth testing...
+
+# graph1.100 <- replicate(test.both.methods("sim.graph.1.r.txt",
+#  sample.size=100), n=500)
+# graph2.100 <- replicate(test.both.methods("sim.graph.2.r.txt",
+#  sample.size=100), n=500)
+# graph3.100 <- replicate(test.both.methods("sim.graph.3.r.txt",
+#  sample.size=100), n=500)
+# graph4.100 <- replicate(test.both.methods("sim.graph.4.r.txt",
+#  sample.size=100), n=500)
+# graph5.100 <- replicate(test.both.methods("sim.graph.5.r.txt",
+#  sample.size=100), n=500)
 
 
 save.image("inital.tests")
