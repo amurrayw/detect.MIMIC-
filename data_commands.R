@@ -9,7 +9,7 @@ read.dag <- function(file){
 	orig.mat[orig.mat==-1] <-1
 	
 	final.graph <- igraph.to.graphNEL(graph.adjacency(orig.mat))
-	
+
 	return(final.graph)
 }
 
@@ -25,6 +25,7 @@ generate.data.from.dag <- function(graph, n=100, errDist="normal"){
 	
 	generated.data<-data.frame(rmvDAG(dag=graph, n=n, errDist=errDist))
 	names(generated.data) <- var.names
+	
 	return(generated.data)
 }
 

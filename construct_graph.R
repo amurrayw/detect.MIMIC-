@@ -29,6 +29,11 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.i
 
 	mimic.model.list<-convert.list.to.adj.mat(list.obj=sobers.step,
 		 inputs.and.outputs=input.outputs, var.names=names(data))
+
+		# n.latents <- ncol(mimic.model.list)-ncol(data)
+		# names(mimic.model.list) <- c(names(data),
+		#  paste("L", 1:(n.latents), sep=""))
+
 		
 	mimic.model.graph <- igraph.to.graphNEL(graph.adjacency(mimic.model.list))
 		if(print.intermediate){
@@ -46,10 +51,17 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.i
 		 mimic.graph=mimic.model.graph)
 		
 		
+	pre.sober.model <- convert.list.to.adj.mat(list.obj=latent.structure,
+			 inputs.and.outputs=input.outputs, var.names=names(data))
+	
+	# names(pre.sober.model) <- nodes(final.model)
+		
+	pre.sober.model <- igraph.to.graphNEL(graph.adjacency(pre.sober.model))
+		
 	return(list("pc.depth.0"=pc.model, inputs.outputs=input.outputs,
-	 latent.structure=latent.structure, sobers.step=sobers.step,
-	 last.pc=last.pc, mimic.model.graph=mimic.model.graph,
-	 final.model=final.model))
+	 latent.structure=latent.structure, pre.sober.model=pre.sober.model, 
+	sobers.step=sobers.step, last.pc=last.pc,
+	 mimic.model.graph=mimic.model.graph, final.model=final.model))
 }
 
 # Finds PC model. Determines optimal depth via recursion.
@@ -354,8 +366,6 @@ last.step <- function(inputs.outputs, pc.graph, mimic.graph){
 	
 
 	if(!is.null(false.outputs) && length(false.outputs)>0){
-		print("false.outputs")
-		print(false.outputs)
 			for(j in false.outputs){
 				
 				false.connected.latents<-(which(mimic.adj.matrix[
