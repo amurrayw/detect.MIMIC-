@@ -12,11 +12,11 @@
 # 
 # 			fpr	
 # 			False Positive Rate: Number of incorrectly found edges divided by
- # number of true gaps (in true graph)
+#  number of true gaps (in true graph)
 # 
 # 			tdr	
 # 			True Discovery Rate: Number of correctly found edges divided by
- # number of found edges (both in estimated graph)
+#  number of found edges (both in estimated graph)
 score.both <- function(graph.sim, graph.name, cut.off=.3){
 	
 	true.graph <- as(read.dag(graph.name), "matrix")
@@ -163,7 +163,8 @@ prune.fa.paths <- function(fa.model, cut.off=.3){
 		 1:n.latents), "col"=c(var.names, 1:n.latents)))
 	
 	for(i in 1:n.latents){
-		adj.mat[fa.model$loadings[,1]>cut.off, i+length(var.names)] <- TRUE
+		adj.mat[abs(fa.model$loadings[,1])>cut.off, 
+		i+length(var.names)] <- TRUE
 	}
 	
 	adj.mat[(length(var.names)+1):(length(var.names)+n.latents),
@@ -268,9 +269,7 @@ convert.graph.groups <- function(graph.groups = graph.groups){
 plot.rates <-function(score.list){
 		for(i in 1:length(score.list)){
 			
-			graph.n <- paste()
-			
-			par(mfrow=c(3,3))
+			par(mfrow=c(2,2))
 			barplot(score.list[[i]]$mimic.scores[,1], 
 				main=paste("MIMIC - Graph ",i, " True Positive Rate", sep=""),
 				 col=1:4, ylab="Rate", xlab="Number of observations")
@@ -282,14 +281,7 @@ plot.rates <-function(score.list){
 			barplot(score.list[[i]]$mimic.scores[,3], 
 				main=paste("MIMIC - Graph ",i, " True Discovery Rate",
 				 sep=""), col=1:4, ylab="Rate", xlab="Number of observations")
-				
-			barplot(score.list[[i]]$n.null, 
-				main=paste("MIMIC - Graph ",i, 
-				" Number of False Latent Cases", sep=""), col=1:4,
-				names=c("250", "500", "1000", "10000"),  
-				ylab="Number of incorrect cases", 
-				xlab="Number of observations")
-				
+								
 			barplot(score.list[[i]]$fa.scores[,1],
 				 main=paste("FA - Graph ",i, " True Positive Rate", sep=""),
 				 col=1:4, ylab="Rate", xlab="Number of observations")
@@ -301,6 +293,20 @@ plot.rates <-function(score.list){
 			barplot(score.list[[i]]$fa.scores[,3],
 				 main=paste("FA - Graph ",i, " True Discovery Rate", sep=""),
 				 col=1:4, ylab="Rate", xlab="Number of observations")
+				
+				barplot(score.list[[i]]$n.null, 
+					main=paste("MIMIC - Graph ",i, 
+					" Number of False\n Latent Cases", sep=""), col=1:4,
+					names=c("250", "500", "1000", "10000"),  
+					ylab="Number of incorrect cases", 
+					xlab="Number of observations")
+					
+		}
+		par(mfrow=c(2,2))
+		
+		for(i in 1:length(score.list)){
+			plot(read.dag(paste("sim.graph.", i, ".r.txt", sep="")),
+			 main=paste("True Graph ", i, sep=""))
 			
 		}
 		

@@ -53,7 +53,7 @@ generate.data.set <- function(file="sim.graph.1.r.txt", sample.size=10000){
 }
 
 
-test.graphs <- function(n.graphs=1:5, seed.set=NULL, sample.size=1000, plot.graphs=TRUE){
+test.graphs <- function(n.graphs=1:7, seed.set=NULL, sample.size=1000, plot.graphs=TRUE){
 	
 	if(!is.null(seed.set)){set.seed(seed.set)}
 
