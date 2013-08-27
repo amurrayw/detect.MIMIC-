@@ -1,12 +1,7 @@
-
-
-# score.both(graph2.1000, graph.name="sim.graph.2.r.txt")
-
-
 # Returns average fa.score and mimic.score. Note that scores are
 # as follows: 
 
-# tpr	
+# 			tpr	
 # 			True Positive Rate: Number of correctly found edges (in estimated
 # graph) divided by number of true edges (in true graph)
 # 
@@ -45,7 +40,6 @@ score.both <- function(graph.sim, graph.name, cut.off=.3){
 				result<-score.mimic(mimic.model=mimic.model$final.model,
 			 true.graph=true.graph)
 			
-				# print(result)
 				return(result)
 				}
 			return(c(0,0,0))
@@ -79,34 +73,19 @@ score.mimic <- function(mimic.model, true.graph){
 	n.latents.mimic <- grep(pattern="[L:digit:]",
 	 names(adj.matrix.mimic))
 	
-	# print("mimic.model")
-	# print(mimic.model)
-	
-	# print("igraph.to.graphNEL(graph.adjacency(true.graph))")
-	# print(igraph.to.graphNEL(graph.adjacency(true.graph)))
-	
-	# par(mfrow=c(2,2))
-	# 
-	# 
-	# plot(mimic.model)
-	# plot(igraph.to.graphNEL(graph.adjacency(true.graph)))
-	# 
-	# plot(mimic.model)
-	
 	true.graph<-igraph.to.graphNEL(graph.adjacency(true.graph))
-	# plot(true.graph)
+
+
 	# If the mimic.model found has a different numnber of latents than the
 	# true graph, then cannot calculate tpr, fpr, tdr. Have therfore treated
 	# those as NULL objects. (i.e., as with FA, correct n.latents is assumed)
-	if(length(nodes(mimic.model)) ==
-	 length(nodes(true.graph))){
-		
-		
+	if(length(nodes(mimic.model)) == length(nodes(true.graph))){
 		return(compareGraphs(mimic.model, true.graph))
 	}
 	return(NULL)
 }
 
+# TODO: Need to add case where FA got n.latents wrong.
 # Scores FA model. Note that it assumes fa.model got n.latents correct.
 score.fa <- function(fa.model, cut.off=.3, true.graph){
 	
@@ -116,37 +95,16 @@ score.fa <- function(fa.model, cut.off=.3, true.graph){
 	n.vars <- nrow(fa.mat)
 
 	fa.model <- prune.fa.paths(fa.model, cut.off=cut.off)
-	# print("fa.model")
-	# print(fa.model)
-	
-	# fa.cluster <- get.latent.cluster(adj.matrix=fa.model,
-		 # n.latents=n.latents,
-		 # n.vars=n.vars)
-		
-		# print("true.graph")
-		# print(true.graph)
-		
-	# true.cluster <- get.latent.cluster(adj.matrix=true.graph,
-		 # n.latents=n.latents, n.vars=n.vars)
-		fa.model <- igraph.to.graphNEL(graph.adjacency(fa.model))
-		true.graph <- igraph.to.graphNEL(graph.adjacency(true.graph))
-		# plot(fa.model)
-		graph.comparison <- (compareGraphs(fa.model, true.graph))
 
-		# n.mistakes <- sum(!(which(fa.cluster==1)%in%which(true.cluster==1)))
-		# 
-		# n.correct <- sum((which(fa.cluster==1)%in%which(true.cluster==1)))
-		# 
-		# n.total <- sum(true.cluster==1)
-		# 
-		# print("n.mistakes - Number of Mistaken Clusterings")
-		# print(n.mistakes)
-		# print("n.correct - Number of Correct clusterings")
-		# print(n.correct)
-		# print("n.total - Number of Actual Paths (clusters)")
-		# print(n.total)
+	fa.model <- igraph.to.graphNEL(graph.adjacency(fa.model))
+	true.graph <- igraph.to.graphNEL(graph.adjacency(true.graph))
+	
+	if(length(nodes(fa.model))==length(nodes(true.graph))){
 		
-	return(graph.comparison)
+		graph.comparison <- (compareGraphs(fa.model, true.graph))
+		return(graph.comparison)
+	}
+	return(NULL)
 }
 
 
@@ -183,55 +141,6 @@ get.latent.cluster <- function(adj.matrix, n.latents, n.vars){
 	latent.clusters <- (latent.vectors.col+latent.vectors.row)[
 	-((n.vars+1):(n.vars+n.latents)),]
 	return(latent.clusters)	
-}
-
-
-
-score.graph1.10000<- score.both(graph1.10000, graph.name="sim.graph.1.r.txt")
-score.graph1.1000<- score.both(graph1.1000, graph.name="sim.graph.1.r.txt")
-score.graph1.500<- score.both(graph1.500, graph.name="sim.graph.1.r.txt")
-score.graph1.250<- score.both(graph1.250, graph.name="sim.graph.1.r.txt")
-
-score.graph2.10000<- score.both(graph2.10000, graph.name="sim.graph.2.r.txt")
-score.graph2.1000<- score.both(graph2.1000, graph.name="sim.graph.2.r.txt")
-score.graph2.500<- score.both(graph2.500, graph.name="sim.graph.2.r.txt")
-score.graph2.250<- score.both(graph2.250, graph.name="sim.graph.2.r.txt")
-
-score.graph3.10000<- score.both(graph3.10000, graph.name="sim.graph.3.r.txt")
-score.graph3.1000<- score.both(graph3.1000, graph.name="sim.graph.3.r.txt")
-score.graph3.500<- score.both(graph3.500, graph.name="sim.graph.3.r.txt")
-score.graph3.250<- score.both(graph3.250, graph.name="sim.graph.3.r.txt")
-
-score.graph4.10000<- score.both(graph4.10000, graph.name="sim.graph.4.r.txt")
-score.graph4.1000<- score.both(graph4.1000, graph.name="sim.graph.4.r.txt")
-score.graph4.500<- score.both(graph4.500, graph.name="sim.graph.4.r.txt")
-score.graph4.250<- score.both(graph4.250, graph.name="sim.graph.4.r.txt")
-
-score.graph5.10000<- score.both(graph5.10000, graph.name="sim.graph.5.r.txt")
-score.graph5.1000<- score.both(graph5.1000, graph.name="sim.graph.5.r.txt")
-score.graph5.500<- score.both(graph5.500, graph.name="sim.graph.5.r.txt")
-score.graph5.250<- score.both(graph5.250, graph.name="sim.graph.5.r.txt")
-
-score.graph6.10000<- score.both(graph6.10000, graph.name="sim.graph.6.r.txt")
-score.graph6.1000<- score.both(graph6.1000, graph.name="sim.graph.6.r.txt")
-score.graph6.500<- score.both(graph6.500, graph.name="sim.graph.6.r.txt")
-score.graph6.250<- score.both(graph6.250, graph.name="sim.graph.6.r.txt")
-
-score.graph7.10000<- score.both(graph7.10000, graph.name="sim.graph.7.r.txt")
-score.graph7.1000<- score.both(graph7.1000, graph.name="sim.graph.7.r.txt")
-score.graph7.500<- score.both(graph7.500, graph.name="sim.graph.7.r.txt")
-score.graph7.250<- score.both(graph7.250, graph.name="sim.graph.7.r.txt")
-
-
-
-
-# TODO: Rewrite this portion. It is ugly, and should be in a function.
-number.graphs<-7
-graph.groups <- c()
-for(k in 1:number.graphs){
-	graph.groups[[k]] <- list(
-	 ls()[grep(pattern=paste("score.graph",
-	 k, ".", sep=""), ls(), fixed=T)])
 }
 
 

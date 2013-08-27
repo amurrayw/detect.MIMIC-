@@ -2,10 +2,10 @@
 # TODO: Break up long functions into smaller helper functions
 # TODO: Comment this spaghetti code
 
-require(pcalg)
-require(igraph)
-require(gRim)
-require(plotrix)
+# require(pcalg)
+# require(igraph)
+# require(gRim)
+# require(plotrix)
 
 find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.intermediate=FALSE){
 	pc.model <- find.pc.model(data=data, alpha=alpha, indepTest=indepTest)

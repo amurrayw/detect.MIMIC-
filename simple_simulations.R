@@ -1,7 +1,5 @@
 
 
-source("construct_graph.R")
-source("data_commands.R")
 
 
 
@@ -126,68 +124,6 @@ plot.test<-function(graph.list){
 }
 
 
-graph1.10000 <- replicate(test.both.methods("sim.graph.1.r.txt",
- sample.size=10000), n=500)
-graph2.10000 <- replicate(test.both.methods("sim.graph.2.r.txt",
- sample.size=10000), n=500)
-graph3.10000 <- replicate(test.both.methods("sim.graph.3.r.txt",
- sample.size=10000), n=500)
-graph4.10000 <- replicate(test.both.methods("sim.graph.4.r.txt",
- sample.size=10000), n=500)
-graph5.10000 <- replicate(test.both.methods("sim.graph.5.r.txt",
- sample.size=10000), n=500)
-graph6.10000 <- replicate(test.both.methods("sim.graph.6.r.txt",
- sample.size=10000), n=500)
-graph7.10000 <- replicate(test.both.methods("sim.graph.7.r.txt",
- sample.size=10000), n=500)
-
-
-
-graph1.1000 <- replicate(test.both.methods("sim.graph.1.r.txt",
- sample.size=1000), n=500)
-graph2.1000 <- replicate(test.both.methods("sim.graph.2.r.txt",
- sample.size=1000), n=500)
-graph3.1000 <- replicate(test.both.methods("sim.graph.3.r.txt",
- sample.size=1000), n=500)
-graph4.1000 <- replicate(test.both.methods("sim.graph.4.r.txt",
- sample.size=1000), n=500)
-graph5.1000 <- replicate(test.both.methods("sim.graph.5.r.txt",
- sample.size=1000), n=500)
-graph6.1000 <- replicate(test.both.methods("sim.graph.6.r.txt",
- sample.size=1000), n=500)
-graph7.1000 <- replicate(test.both.methods("sim.graph.7.r.txt",
- sample.size=1000), n=500)
-
-graph1.500 <- replicate(test.both.methods("sim.graph.1.r.txt",
- sample.size=500), n=500)
-graph2.500 <- replicate(test.both.methods("sim.graph.2.r.txt",
- sample.size=500), n=500)
-graph3.500 <- replicate(test.both.methods("sim.graph.3.r.txt",
- sample.size=500), n=500)
-graph4.500 <- replicate(test.both.methods("sim.graph.4.r.txt",
- sample.size=500), n=500)
-graph5.500 <- replicate(test.both.methods("sim.graph.5.r.txt",
- sample.size=500), n=500)
-graph6.500 <- replicate(test.both.methods("sim.graph.6.r.txt",
- sample.size=500), n=500)
-graph7.500 <- replicate(test.both.methods("sim.graph.7.r.txt",
- sample.size=500), n=500)
-
-graph1.250 <- replicate(test.both.methods("sim.graph.1.r.txt",
- sample.size=250), n=500)
-graph2.250 <- replicate(test.both.methods("sim.graph.2.r.txt",
- sample.size=250), n=500)
-graph3.250 <- replicate(test.both.methods("sim.graph.3.r.txt",
- sample.size=250), n=500)
-graph4.250 <- replicate(test.both.methods("sim.graph.4.r.txt",
- sample.size=250), n=500)
-graph5.250 <- replicate(test.both.methods("sim.graph.5.r.txt",
- sample.size=250), n=500)
-graph6.250 <- replicate(test.both.methods("sim.graph.6.r.txt",
- sample.size=250), n=500)
-graph7.250 <- replicate(test.both.methods("sim.graph.7.r.txt",
- sample.size=250), n=500)
-
 
 # Too unreliable with so little data (e.g., can end up with no outputs,
 # leading to errors in the adj.matrix construction).
@@ -204,5 +140,4 @@ graph7.250 <- replicate(test.both.methods("sim.graph.7.r.txt",
 #  sample.size=100), n=500)
 
 
-save.image("second.tests")
 
