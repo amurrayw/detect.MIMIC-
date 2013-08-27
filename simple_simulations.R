@@ -8,7 +8,7 @@ source("data_commands.R")
 
 # Runs both FA test, as well as detect.MIMIC
 test.both.methods <- function(file="sim.graph.1.r.txt", sample.size=1000,
- alpha=.01, pval=.05, cut.off=.3){
+ alpha=.01, pval=.05, cut.off=.3, scree=FALSE){
 	
 	dataset <- generate.data.set(file=file, sample.size=sample.size)[[1]]
 	
@@ -18,7 +18,8 @@ test.both.methods <- function(file="sim.graph.1.r.txt", sample.size=1000,
 	# print(head(clean.dataset))
 	
 	fa.results <- test.fa(clean.dataset,
-		 n.latents=ncol(dataset)-ncol(clean.dataset), cut.off=cut.off)
+		 n.latents=ncol(dataset)-ncol(clean.dataset), cut.off=cut.off,
+		 scree==scree)
 		
 	detect.mimic.results <- find.mimic(clean.dataset, alpha=alpha,
 			 pval=pval)
@@ -30,7 +31,7 @@ test.both.methods <- function(file="sim.graph.1.r.txt", sample.size=1000,
 }
 
 # Runs runs factor analysis on datset.
-test.fa <- function(dataset, n.latents, cut.off=.3){
+test.fa <- function(dataset, n.latents, cut.off=.3, scree=FALSE){
 	
 	# Ensures latents removed from dataset.
 	# dataset <- dataset[,-grep(pattern="[L:digit:]",
@@ -38,7 +39,14 @@ test.fa <- function(dataset, n.latents, cut.off=.3){
 	
 	var.names <- names(dataset)
 	
-	fa.model <- factanal(dataset, factors=n.latents)
+	if(scree){
+		
+		
+	}
+	else{
+		fa.model <- factanal(dataset, factors=n.latents)
+	}
+	
 	
 	return(fa.model)
 }

@@ -3,7 +3,7 @@
 # score.both(graph2.1000, graph.name="sim.graph.2.r.txt")
 
 
-# Returns average fa.score and mimic score. Note that scores are
+# Returns average fa.score and mimic.score. Note that scores are
 # as follows: 
 
 # tpr	
