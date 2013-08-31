@@ -208,8 +208,8 @@ plot.rates <-function(score.list){
 			 col.axis="black", las=2)
 			
 			
-			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
-			 xpd=TRUE)
+			legend(x="topright", col=2:3, legend=c("detect.MIMIC", 
+			"Factor Analysis"), pch=16, xpd=TRUE)
 
 
 			barplot(cbind(score.list[[i]]$mimic.scores[,2],
@@ -224,8 +224,8 @@ plot.rates <-function(score.list){
 				 col.axis="black", las=2)
 			
 			
-			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
-			 xpd=TRUE)
+				legend(x="topright", col=2:3, legend=c("detect.MIMIC",
+				 "Factor Analysis"), pch=16, xpd=TRUE)
 			
 			barplot(cbind(score.list[[i]]$mimic.scores[,3],
 				 score.list[[i]]$fa.scores[,3]), 
@@ -239,8 +239,8 @@ plot.rates <-function(score.list){
 				 col.axis="black", las=2)
 			
 			
-			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
-				 xpd=TRUE)
+				legend(x="topright", col=2:3, legend=c("detect.MIMIC",
+				 "Factor Analysis"), pch=16, xpd=TRUE)
 					
 			barplot(cbind(score.list[[i]]$n.null.mimic/500,
 				 score.list[[i]]$n.null.fa/500), 
@@ -256,8 +256,8 @@ plot.rates <-function(score.list){
 				axis(2, at=c(0,.2,.4,.6,.8,1),labels=c(0,.2,.4,.6,.8,1),
 				 col.axis="black", las=2)
 			
-			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
-				 xpd=TRUE)
+				legend(x="topright", col=2:3, legend=c("detect.MIMIC",
+				 "Factor Analysis"), pch=16, xpd=TRUE)
 			
 					
 		}
