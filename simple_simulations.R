@@ -28,18 +28,26 @@ test.both.methods <- function(file="sim.graph.1.r.txt", sample.size=1000,
 		
 }
 
-# Runs runs factor analysis on datset.
-test.fa <- function(dataset, n.latents, cut.off=.3, scree=FALSE){
+# Runs runs factor analysis on datset. If scree=TRUE, then attempts to 
+# discover n.latents
+test.fa <- function(dataset, n.latents=1, cut.off=.3, scree=TRUE){
 	
 	# Ensures latents removed from dataset.
 	# dataset <- dataset[,-grep(pattern="[L:digit:]",
 	#  names(dataset))]
 	
 	var.names <- names(dataset)
-	
+
+
 	if(scree){
-		
-		
+		# As most papers have suggested using several different tests for
+		# n.factors, have chosen to choose most frequent number reported. In
+		# the event of a tie, the smaller number of latents is chosen, as 
+		# most papers suggest parsimoney.
+		n.latents <-
+		 as.numeric(names(which.max(table(unlist(c(nScree(x=dataset,
+		 model="factors")$Components))))))
+		fa.model <- factanal(dataset, factors=n.latents)
 	}
 	else{
 		fa.model <- factanal(dataset, factors=n.latents)
@@ -122,22 +130,5 @@ plot.test<-function(graph.list){
 	}
 	
 }
-
-
-
-# Too unreliable with so little data (e.g., can end up with no outputs,
-# leading to errors in the adj.matrix construction).
-
-# graph1.100 <- replicate(test.both.methods("sim.graph.1.r.txt",
-#  sample.size=100), n=500)
-# graph2.100 <- replicate(test.both.methods("sim.graph.2.r.txt",
-#  sample.size=100), n=500)
-# graph3.100 <- replicate(test.both.methods("sim.graph.3.r.txt",
-#  sample.size=100), n=500)
-# graph4.100 <- replicate(test.both.methods("sim.graph.4.r.txt",
-#  sample.size=100), n=500)
-# graph5.100 <- replicate(test.both.methods("sim.graph.5.r.txt",
-#  sample.size=100), n=500)
-
 
 

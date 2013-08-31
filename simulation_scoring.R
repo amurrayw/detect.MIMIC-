@@ -45,20 +45,32 @@ score.both <- function(graph.sim, graph.name, cut.off=.3){
 			return(c(0,0,0))
 			})
 		
-	n.with.incorrect.latents <- 0
+		
+		# TODO: need to modify this so that it also tracks the number of
+		# failures for FA. Also likely need to put something in in case FA
+		# gets nothing right.
+	n.with.incorrect.latents.mimic <- 0
 	for(i in mimic.score){
-		if(is.null(i)){n.with.incorrect.latents <- n.with.incorrect.latents+1}
+		if(is.null(i)){n.with.incorrect.latents.mimic <-
+			 n.with.incorrect.latents.mimic+1}
+	}
+	
+	n.with.incorrect.latents.fa <- 0
+	for(i in fa.score){
+		if(is.null(i)){n.with.incorrect.latents.fa <-
+			 n.with.incorrect.latents.fa+1}
 	}
 
 	fa.score <- (do.call(rbind, fa.score))
 	mimic.score <- (do.call(rbind, mimic.score))
 
-	fa.score <- colMeans(fa.score)
+	if(is.null(fa.score)){fa.score <- c(0,0,0)}
+	else{fa.score <- colMeans(fa.score)}
 	mimic.score <- colMeans(mimic.score)
 			
 	return(list(fa.score=fa.score, mimic.score=mimic.score,
-		 n.with.incorrect.latents))
-	
+		 latent.incorrect.mimic = n.with.incorrect.latents.mimic, 
+		latent.incorrect.fa = n.with.incorrect.latents.fa))	
 }
 
 score.mimic <- function(mimic.model, true.graph){
@@ -85,8 +97,7 @@ score.mimic <- function(mimic.model, true.graph){
 	return(NULL)
 }
 
-# TODO: Need to add case where FA got n.latents wrong.
-# Scores FA model. Note that it assumes fa.model got n.latents correct.
+# Scores FA model.
 score.fa <- function(fa.model, cut.off=.3, true.graph){
 	
 	fa.mat <- as(fa.model$loadings, "matrix")
@@ -98,7 +109,7 @@ score.fa <- function(fa.model, cut.off=.3, true.graph){
 
 	fa.model <- igraph.to.graphNEL(graph.adjacency(fa.model))
 	true.graph <- igraph.to.graphNEL(graph.adjacency(true.graph))
-	
+
 	if(length(nodes(fa.model))==length(nodes(true.graph))){
 		
 		graph.comparison <- (compareGraphs(fa.model, true.graph))
@@ -121,7 +132,8 @@ prune.fa.paths <- function(fa.model, cut.off=.3){
 		 1:n.latents), "col"=c(var.names, 1:n.latents)))
 	
 	for(i in 1:n.latents){
-		adj.mat[abs(fa.model$loadings[,1])>cut.off, 
+
+		adj.mat[abs(fa.model$loadings[,i])>cut.off, 
 		i+length(var.names)] <- TRUE
 	}
 	
@@ -133,8 +145,6 @@ prune.fa.paths <- function(fa.model, cut.off=.3){
 }
 
 get.latent.cluster <- function(adj.matrix, n.latents, n.vars){
-	
-	
 	latent.vectors.col <- adj.matrix[,(n.vars+1):(n.vars+n.latents)]
 	latent.vectors.row <- t(adj.matrix[(n.vars+1):(n.vars+n.latents),])	
 	
@@ -150,7 +160,8 @@ convert.graph.groups <- function(graph.groups = graph.groups){
 	
 	for(i in 1:length(graph.groups)){
 		graph.list <- unlist(graph.groups[[i]])[c(3,4,1,2)]
-		n.null <- c()
+		n.null.mimic <- c()
+		n.null.fa <- c()
 		graph.fa.score <- c()
 		graph.mimic.score <- c()
 		var.names <- c()
@@ -161,15 +172,19 @@ convert.graph.groups <- function(graph.groups = graph.groups){
 			graph.fa.score <- rbind(graph.fa.score, unlist(graph.score[[1]]))
 			graph.mimic.score <- rbind(graph.mimic.score,
 				 unlist(graph.score[[2]]))
-				
-			n.null <- c(n.null, unlist(graph.score[[3]]))
+			
+			# 	TODO: need to change this bit so that it handles the two-null
+			# case.
+			n.null.mimic <- c(n.null.mimic, unlist(graph.score[[3]]))
+			n.null.fa <- c(n.null.fa, unlist(graph.score[[4]]))
 		}
 		
 		row.names(graph.fa.score) <- c("250", "500", "1000", "10000")
 		row.names(graph.mimic.score) <- c("250", "500", "1000", "10000")
 		
 		graph.final[[i]] <- list(fa.scores=graph.fa.score,
-			 mimic.scores=graph.mimic.score, n.null=n.null)
+			 mimic.scores=graph.mimic.score, n.null.mimic=n.null.mimic, 
+			n.null.fa=n.null.fa)
 		
 	}
 	return(graph.final)
@@ -203,12 +218,23 @@ plot.rates <-function(score.list){
 				 main=paste("FA - Graph ",i, " True Discovery Rate", sep=""),
 				 col=1:4, ylab="Rate", xlab="Number of observations")
 				
-				barplot(score.list[[i]]$n.null, 
+				barplot(score.list[[i]]$n.null.mimic, 
 					main=paste("MIMIC - Graph ",i, 
-					" Number of False\n Latent Cases", sep=""), col=1:4,
+					" Precentage of False\n Latent Cases (out of 500)",
+					 sep=""), col=1:4,
 					names=c("250", "500", "1000", "10000"),  
 					ylab="Number of incorrect cases", 
 					xlab="Number of observations")
+					
+					
+					barplot(score.list[[i]]$n.null.fa, 
+						main=paste("FA - Graph ",i, 
+						" Precentage of False\n Latent Cases (out of 500)",
+						 sep=""), col=1:4,
+						names=c("250", "500", "1000", "10000"),  
+						ylab="Number of incorrect cases", 
+						xlab="Number of observations")
+					
 					
 		}
 		par(mfrow=c(2,2))

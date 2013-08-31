@@ -2,6 +2,8 @@ require(pcalg)
 require(igraph)
 require(gRim)
 require(plotrix)
+require(nFactors)
+
 
 
 source("construct_graph.R")
@@ -78,7 +80,7 @@ graph7.250 <- replicate(test.both.methods("sim.graph.7.r.txt",
  sample.size=250), n=500)
 
 
-save.image("simulation.results.RData")
+save.image("simulation.results.latents.RData")
 
 
 
@@ -131,4 +133,6 @@ for(k in 1:number.graphs){
 }
 
 
-save.image("scored.simulations.RData")
+save.image("scored.simulations.latents.RData")
+
+
