@@ -193,48 +193,72 @@ convert.graph.groups <- function(graph.groups = graph.groups){
 plot.rates <-function(score.list){
 		for(i in 1:length(score.list)){
 			
-			par(mfrow=c(2,2))
-			barplot(score.list[[i]]$mimic.scores[,1], 
-				main=paste("MIMIC - Graph ",i, " True Positive Rate", sep=""),
-				 col=1:4, ylab="Rate", xlab="Number of observations")
-				
-			barplot(score.list[[i]]$mimic.scores[,2], 
-				main=paste("MIMIC - Graph ",i, " False Positive Rate",
-				 sep=""), col=1:4, ylab="Rate", xlab="Number of observations")
-				
-			barplot(score.list[[i]]$mimic.scores[,3], 
-				main=paste("MIMIC - Graph ",i, " True Discovery Rate",
-				 sep=""), col=1:4, ylab="Rate", xlab="Number of observations")
-								
-			barplot(score.list[[i]]$fa.scores[,1],
-				 main=paste("FA - Graph ",i, " True Positive Rate", sep=""),
-				 col=1:4, ylab="Rate", xlab="Number of observations")
-				
-			barplot(score.list[[i]]$fa.scores[,2],
-				 main=paste("FA - Graph ",i, " False Positive Rate", sep=""),
-				 col=1:4, ylab="Rate", xlab="Number of observations")
-				
-			barplot(score.list[[i]]$fa.scores[,3],
-				 main=paste("FA - Graph ",i, " True Discovery Rate", sep=""),
-				 col=1:4, ylab="Rate", xlab="Number of observations")
-				
-				barplot(score.list[[i]]$n.null.mimic, 
-					main=paste("MIMIC - Graph ",i, 
-					" Precentage of False\n Latent Cases (out of 500)",
-					 sep=""), col=1:4,
-					names=c("250", "500", "1000", "10000"),  
-					ylab="Number of incorrect cases", 
-					xlab="Number of observations")
+			par(mfrow=c(1,1))
+			
+			
+			barplot(cbind(score.list[[i]]$mimic.scores[,1],
+				 score.list[[i]]$fa.scores[,1]), 
+				main=paste("Graph ",i, " True Positive Rate", sep=""),
+				 col=c(2,2,2,2, 3,3,3,3),
+				 ylab="Rate", xlab="Number of observations",
+				 ylim=c(0,1.2), beside=T, names=c("250", "500", "1000",
+				 "10000","250", "500", "1000", "10000"), yaxt="n")
+			
+			axis(2, at=c(0,.2,.4,.6,.8,1),labels=c(0,.2,.4,.6,.8,1),
+			 col.axis="black", las=2)
+			
+			
+			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
+			 xpd=TRUE)
+
+
+			barplot(cbind(score.list[[i]]$mimic.scores[,2],
+				 score.list[[i]]$fa.scores[,2]), 
+				main=paste("Graph ",i, " False Positive Rate", sep=""),
+				 col=c(2,2,2,2, 3,3,3,3),
+				 ylab="Rate", xlab="Number of observations",
+				 ylim=c(0,1.2), beside=T, names=c("250", "500", "1000",
+				 "10000","250", "500", "1000", "10000"), yaxt="n")
+			
+				axis(2, at=c(0,.2,.4,.6,.8,1),labels=c(0,.2,.4,.6,.8,1),
+				 col.axis="black", las=2)
+			
+			
+			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
+			 xpd=TRUE)
+			
+			barplot(cbind(score.list[[i]]$mimic.scores[,3],
+				 score.list[[i]]$fa.scores[,3]), 
+				main=paste("Graph ",i, " True Discovery Rate", sep=""),
+				 col=c(2,2,2,2, 3,3,3,3),
+				 ylab="Rate", xlab="Number of observations",
+				 ylim=c(0,1.2), beside=T, names=c("250", "500", "1000",
+				 "10000","250", "500", "1000", "10000"), yaxt="n")
+			
+				axis(2, at=c(0,.2,.4,.6,.8,1),labels=c(0,.2,.4,.6,.8,1),
+				 col.axis="black", las=2)
+			
+			
+			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
+				 xpd=TRUE)
 					
-					
-					barplot(score.list[[i]]$n.null.fa, 
-						main=paste("FA - Graph ",i, 
-						" Precentage of False\n Latent Cases (out of 500)",
-						 sep=""), col=1:4,
-						names=c("250", "500", "1000", "10000"),  
-						ylab="Number of incorrect cases", 
-						xlab="Number of observations")
-					
+			barplot(cbind(score.list[[i]]$n.null.mimic/500,
+				 score.list[[i]]$n.null.fa/500), 
+				main=paste("Graph ",i, 
+				" Precentage of False\n Latent Cases (out of 500)",
+				 sep=""), col=c(2,2,2,2, 3,3,3,3),
+				names=c("250", "500", "1000",
+				 "10000","250", "500", "1000", "10000"),  
+				ylab="Percentage incorrect", 
+				xlab="Number of observations",
+				 ylim=c(0,1.2), beside=T, yaxt="n")
+				
+				axis(2, at=c(0,.2,.4,.6,.8,1),labels=c(0,.2,.4,.6,.8,1),
+				 col.axis="black", las=2)
+			
+			legend(x="topright", col=2:3, legend=c("MIMIC", "FA"), pch=16,
+				 xpd=TRUE)
+			
 					
 		}
 		par(mfrow=c(2,2))

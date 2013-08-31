@@ -29,7 +29,7 @@ test.both.methods <- function(file="sim.graph.1.r.txt", sample.size=1000,
 }
 
 # Runs runs factor analysis on datset. If scree=TRUE, then attempts to 
-# discover n.latents
+# discover n.latents. Uses varimax rotation.
 test.fa <- function(dataset, n.latents=1, cut.off=.3, scree=TRUE){
 	
 	# Ensures latents removed from dataset.
