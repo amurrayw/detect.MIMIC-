@@ -136,3 +136,7 @@ for(k in 1:number.graphs){
 save.image("scored.simulations.latents.RData")
 
 
+
+pdf("sim.res.pdf")
+plot.rates(convert.graph.groups(graph.groups))
+dev.off()

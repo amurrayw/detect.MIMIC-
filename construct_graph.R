@@ -8,6 +8,11 @@
 # require(plotrix)
 
 find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.intermediate=FALSE){
+	
+	orig.names <- names(data)
+	
+	names(data) <- paste("X", 1:ncol(data), sep="")
+	
 	pc.model <- find.pc.model(data=data, alpha=alpha, indepTest=indepTest)
 
 	# If no edges are directed, then return the undirected pc graph.
@@ -34,7 +39,10 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.i
 		# names(mimic.model.list) <- c(names(data),
 		#  paste("L", 1:(n.latents), sep=""))
 
-		
+	names(mimic.model.list) <- c(orig.names, paste("L",
+	 1:(ncol(mimic.model.list)-ncol(data)), sep=""))
+	
+	
 	mimic.model.graph <- igraph.to.graphNEL(graph.adjacency(mimic.model.list))
 		if(print.intermediate){
 			print("inputs and outputs")
@@ -51,8 +59,18 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.i
 		 mimic.graph=mimic.model.graph)
 		
 		
+		nodes(final.model) <- c(orig.names, paste("L",
+		 1:(ncol(mimic.model.list)-ncol(data)), sep=""))
+		
+		
+		# names(data) <- c(orig.names)
+		
 	pre.sober.model <- convert.list.to.adj.mat(list.obj=latent.structure,
 			 inputs.and.outputs=input.outputs, var.names=names(data))
+	
+	
+		
+	
 	
 	# names(pre.sober.model) <- nodes(final.model)
 		
