@@ -1,3 +1,7 @@
+
+# TODO: If neccessary, purge variables after initial pc model is found if they
+# have both an indegree and outdegree of 0. (for memory optimization
+# purposes)
 # TODO: Clean up code.
 # TODO: Break up long functions into smaller helper functions
 # TODO: Comment this spaghetti code
@@ -7,7 +11,8 @@
 # require(gRim)
 # require(plotrix)
 
-find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.intermediate=FALSE){
+find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, 
+	print.intermediate=FALSE, high.dim=FALSE){
 	
 	orig.names <- names(data)
 	
@@ -27,23 +32,35 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.i
 	
 	latent.structure <- finding.latent.structure(input.outputs, pc.model)
 	
+	if(high.dim){rm(pc.model)}
+
 	sobers.step <- sobers.criterion(latent.structure, data,
 		 input.outputs, pval)
 
-	last.pc <- final.pc.run(data=data, alpha=alpha, indepTest=indepTest)
+	if(high.dim){rm(latent.structure)}
 
+	last.pc <- final.pc.run(data=data, alpha=alpha, indepTest=indepTest)
+	# print("input.outputs")
+	# print(input.outputs)
+	# 
+	# print("sobers.step")
+	# print(sobers.step)
+	# print("names(data)")
+	# print(names(data))
+	
 	mimic.model.list<-convert.list.to.adj.mat(list.obj=sobers.step,
 		 inputs.and.outputs=input.outputs, var.names=names(data))
 
-		# n.latents <- ncol(mimic.model.list)-ncol(data)
-		# names(mimic.model.list) <- c(names(data),
-		#  paste("L", 1:(n.latents), sep=""))
+	n.lat <- ncol(mimic.model.list)
+
 
 	names(mimic.model.list) <- c(orig.names, paste("L",
 	 1:(ncol(mimic.model.list)-ncol(data)), sep=""))
-	
-	
+		
 	mimic.model.graph <- igraph.to.graphNEL(graph.adjacency(mimic.model.list))
+	
+	if(high.dim){rm(mimic.model.list); rm(sobers.step)}
+	
 		if(print.intermediate){
 			print("inputs and outputs")
 			print(input.outputs)
@@ -60,26 +77,27 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, print.i
 		
 		
 		nodes(final.model) <- c(orig.names, paste("L",
-		 1:(ncol(mimic.model.list)-ncol(data)), sep=""))
+		 1:(n.lat-ncol(data)), sep=""))
 		
 		
+	if(high.dim){return(list(final.model=final.model))}
+	else{
 		# names(data) <- c(orig.names)
 		
-	pre.sober.model <- convert.list.to.adj.mat(list.obj=latent.structure,
-			 inputs.and.outputs=input.outputs, var.names=names(data))
+		pre.sober.model <- convert.list.to.adj.mat(list.obj=latent.structure,
+				 inputs.and.outputs=input.outputs, var.names=names(data))
 	
-	
+
+		# names(pre.sober.model) <- nodes(final.model)
 		
-	
-	
-	# names(pre.sober.model) <- nodes(final.model)
+		pre.sober.model <-
+		 igraph.to.graphNEL(graph.adjacency(pre.sober.model))
 		
-	pre.sober.model <- igraph.to.graphNEL(graph.adjacency(pre.sober.model))
-		
-	return(list("pc.depth.0"=pc.model, inputs.outputs=input.outputs,
-	 latent.structure=latent.structure, pre.sober.model=pre.sober.model, 
-	sobers.step=sobers.step, last.pc=last.pc,
-	 mimic.model.graph=mimic.model.graph, final.model=final.model))
+		return(list("pc.depth.0"=pc.model, inputs.outputs=input.outputs,
+		 latent.structure=latent.structure, pre.sober.model=pre.sober.model, 
+		sobers.step=sobers.step, last.pc=last.pc,
+		 mimic.model.graph=mimic.model.graph, final.model=final.model))
+	}
 }
 
 # Finds PC model. Determines optimal depth via recursion.
@@ -327,8 +345,12 @@ convert.list.to.adj.mat <- function(list.obj, inputs.and.outputs, var.names){
 		 (length(var.names)+n.latent)*(length(var.names)+n.latent)))
 	
 	adj.mat <- data.frame(adj.mat)
-
+	
 	names(adj.mat) <- c(var.names, 1:n.latent)
+	
+	print((var.names))
+	print(c(row.names(adj.mat), 1:n.latent))
+
 	row.names(adj.mat) <- c(var.names, 1:n.latent)
 	
 	# assign latents to their positions
