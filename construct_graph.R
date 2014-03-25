@@ -45,13 +45,6 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05,
 	if(high.dim){rm(latent.structure)}
 
 	last.pc <- final.pc.run(data=data, alpha=alpha, indepTest=indepTest)
-	# print("input.outputs")
-	# print(input.outputs)
-	# 
-	# print("sobers.step")
-	# print(sobers.step)
-	# print("names(data)")
-	# print(names(data))
 	
 	mimic.model.list<-convert.list.to.adj.mat(list.obj=sobers.step,
 		 inputs.and.outputs=input.outputs, var.names=names(data))
