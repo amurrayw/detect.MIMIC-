@@ -11,6 +11,9 @@
 # require(gRim)
 # require(plotrix)
 
+#Ignore this line
+# require(Matrix)
+
 find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05, 
 	print.intermediate=FALSE, high.dim=FALSE){
 	
@@ -20,9 +23,11 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05,
 	
 	pc.model <- find.pc.model(data=data, alpha=alpha, indepTest=indepTest)
 
+	deg.model<- graph::degree((pc.model))
 	# If no edges are directed, then return the undirected pc graph.
-	if(length(degree(pc.model)) < 2 ||
-	length(degree(pc.model)) >2){return(pc.model)}
+
+	if(length(deg.model) < 2 ||
+	length(deg.model) >2){return(pc.model)}
 
 	input.outputs <- find.in.out(pc.model)
 	
@@ -56,8 +61,9 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05,
 
 	names(mimic.model.list) <- c(orig.names, paste("L",
 	 1:(ncol(mimic.model.list)-ncol(data)), sep=""))
-		
-	mimic.model.graph <- igraph.to.graphNEL(graph.adjacency(mimic.model.list))
+	
+
+	mimic.model.graph <- igraph.to.graphNEL(graph.adjacency(as.matrix(mimic.model.list)))
 	
 	if(high.dim){rm(mimic.model.list); rm(sobers.step)}
 	
@@ -91,7 +97,7 @@ find.mimic <- function(data, alpha=.01, indepTest=gaussCItest, pval=.05,
 		# names(pre.sober.model) <- nodes(final.model)
 		
 		pre.sober.model <-
-		 igraph.to.graphNEL(graph.adjacency(pre.sober.model))
+		 igraph.to.graphNEL(graph.adjacency(as.matrix(pre.sober.model)))
 		
 		return(list("pc.depth.0"=pc.model, inputs.outputs=input.outputs,
 		 latent.structure=latent.structure, pre.sober.model=pre.sober.model, 
@@ -109,7 +115,7 @@ find.pc.model<-function(data, depth=0, prev.graph=0, indepTest=gaussCItest,
 
 	## define sufficient statistics
 	suffStat <- list(C = cor(data), n = n)
-	pc.model<-pc(suffStat, indepTest, p, alpha,
+	pc.model<-pc(suffStat=suffStat, indepTest=indepTest, p=p, alpha=alpha,
 			 m.max=depth)@graph
 	return(pc.model)
 }
@@ -117,7 +123,7 @@ find.pc.model<-function(data, depth=0, prev.graph=0, indepTest=gaussCItest,
 
 # Determines inputs/outputs. Takes a GraphNEL object as input. returns names of inputs and outputs
 find.in.out <- function(graph){
-	indegree.0<- degree(graph)$inDegree==0
+	indegree.0<- graph::degree(graph)$inDegree==0
 	inputs <- c(which(indegree.0))
 
 	candidate.outputs <- which(!indegree.0)
@@ -294,11 +300,11 @@ final.pc.run <- function(data, depth=0, prev.graph=NULL,
 		suffStat <- list(C = cor(data), n = n)
 	}
 	
-	new.graph <- pc(suffStat, indepTest, p, alpha,
+	new.graph <- pc(suffStat=suffStat, indepTest=indepTest, p=p, alpha=alpha,
 		 m.max=depth+1)@graph	
 		
-	if(is.null(prev.graph)){prev.graph<-pc(suffStat,
-		 indepTest, p, alpha, m.max=depth)@graph}
+	if(is.null(prev.graph)){prev.graph<-pc(suffStat=suffStat,
+		 indepTest=indepTest, p=p, alpha=alpha, m.max=depth)@graph}
 	
 	prev.graph <- igraph.from.graphNEL(prev.graph)
 	new.graph <- igraph.from.graphNEL(new.graph)
@@ -430,7 +436,7 @@ last.step <- function(inputs.outputs, pc.graph, mimic.graph){
 			}
 			
 	}
-	return(igraph.to.graphNEL(graph.adjacency(mimic.adj.matrix)))
+	return(igraph.to.graphNEL(graph.adjacency(as.matrix(mimic.adj.matrix))))
 }
 
 
