@@ -8,7 +8,7 @@ read.dag <- function(file){
 	orig.mat[orig.mat==1] <-0
 	orig.mat[orig.mat==-1] <-1
 	
-	print((as.matrix(orig.mat)))
+
 	final.graph <- igraph.to.graphNEL(graph.adjacency(as.matrix(orig.mat)))
 
 	return(final.graph)
